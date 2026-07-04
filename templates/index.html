@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YouTube to MP3</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #0a0a0a;
+            padding: 20px;
+        }
+        .container {
+        background: #1a1a1a;
+        padding: 50px;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(255, 0, 0, 0.15);
+        max-width: 600px;  /* Increased from 500px */
+        width: 100%;
+        border: 1px solid #2a2a2a;
+        }
+        h1 {
+            text-align: center;
+            color: #ff0000;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            background: #0a0a0a;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+        input:focus {
+            border-color: #ff0000;
+        }
+        input::placeholder {
+            color: #555;
+        }
+        button {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 10px;
+            background: #ff0000;
+            color: #fff;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+        button:hover {
+            background: #cc0000;
+            transform: scale(1.02);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        #status {
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 14px;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #111;
+            color: #888;
+        }
+        #status.success {
+            background: #0a2a0a;
+            color: #4caf50;
+            border: 1px solid #4caf50;
+        }
+        #status.error {
+            background: #2a0a0a;
+            color: #ff6b6b;
+            border: 1px solid #ff6b6b;
+        }
+        #status.loading {
+            background: #2a2a0a;
+            color: #ffd93d;
+            border: 1px solid #ffd93d;
+        }
+        #status.complete {
+            background: #0a2a0a;
+            color: #4caf50;
+            border: 1px solid #4caf50;
+        }
+        .progress-container {
+            width: 100%;
+            background: #0a0a0a;
+            border-radius: 10px;
+            margin-top: 15px;
+            height: 8px;
+            overflow: hidden;
+            display: none;
+        }
+        .progress-container.active {
+            display: block;
+        }
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff0000, #ff6b6b);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ffd93d;
+            border-top: 3px solid transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .example-link {
+            color: #4caf50;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 13px;
+            margin-top: 15px;
+            display: inline-block;
+        }
+        .example-link:hover {
+            color: #66bb6a;
+        }
+        /* Mobile Responsive */
+        @media (max-width: 600px) {
+         .container {
+           padding: 20px;
+           margin: 10px;
+        }
+    
+        h1 {
+          font-size: 22px;
+        }
+    
+       .input-group {
+          flex-direction: column;
+        }
+    
+        input {
+          width: 100%;
+          font-size: 16px; /* Prevents zoom on mobile */
+          padding: 12px;
+        }
+    
+        button {
+          width: 100%;
+          padding: 14px;
+          font-size: 16px;
+        }
+    
+       .format-section, .quality-section {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 8px;
+        }
+    
+       .format-section select, .quality-section select {
+          width: 100%;
+          padding: 12px;
+          font-size: 16px;
+        }
+    
+      .footer {
+        font-size: 12px;
+        padding: 10px;
+       }
+    
+       #status {
+         font-size: 13px;
+         padding: 12px;
+         min-height: 40px;
+       }
+    
+      .subtitle {
+        font-size: 13px;
+      }
+      }
+      .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #444;
+            font-size: 12px;
+        }
+        input, select, button {
+           font-size: 16px; /* Prevents iOS zoom */
+         }
+        #naxLink {
+          color: #ff0000;
+          text-decoration: none;
+          font-weight: bold;
+          transition: 0.3s;
+        }
+
+        #naxLink:hover {
+          color: #ff6b6b;
+          text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 YouTube → MP3</h1>
+        <p class="subtitle">Download any YouTube video as high-quality MP3</p>
+        
+        <div class="input-group">
+            <input type="text" id="urlInput" placeholder="Paste YouTube URL here" >
+            <button id="downloadBtn" onclick="startDownload()">Download</button>
+        </div>
+        
+        <div id="status">Ready to download</div>
+        
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>                
+        
+        <div class="footer">
+    Made With 💓 By <a href="https://x.com/NaxNassimpy" target="_blank" id="naxLink">Nax</a> (Follow me on X)
+</div>
+    </div>
+
+    <script>
+        const status = document.getElementById('status');
+        const urlInput = document.getElementById('urlInput');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressContainer = document.getElementById('progressContainer');
+        let isDownloading = false;        
+
+        function updateProgress(percent) {
+            progressBar.style.width = percent + '%';
+        }
+
+        function setStatus(message, type = 'info') {
+            status.className = type;
+            if (type === 'loading') {
+                status.innerHTML = `<span class="spinner"></span> ${message}`;
+            } else {
+                status.textContent = message;
+            }
+        }
+
+        function simulateProgress() {
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 90) {
+                    progress = 90;
+                    clearInterval(interval);
+                }
+                updateProgress(progress);
+            }, 500);
+            return interval;
+        }
+
+        async function startDownload() {
+            if (isDownloading) return;
+            
+            const url = urlInput.value.trim();
+            if (!url) {
+                setStatus('⚠️ Please enter a YouTube URL', 'error');
+                return;
+            }
+
+            if (!url.includes('youtube.com/watch') && !url.includes('youtu.be/')) {
+                setStatus('⚠️ Please enter a valid YouTube URL', 'error');
+                return;
+            }
+
+            isDownloading = true;
+            downloadBtn.disabled = true;
+            downloadBtn.textContent = 'Processing...';
+            progressContainer.classList.add('active');
+            updateProgress(0);
+            setStatus('⏳ Starting download, plz wait a moment..', 'loading');
+
+            // Simulate progress
+            const progressInterval = simulateProgress();
+
+            try {
+                const response = await fetch('/download', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ url: url })
+                });
+
+                clearInterval(progressInterval);
+                updateProgress(100);
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Download failed');
+                }
+
+                // Download complete - get file with proper name
+                const blob = await response.blob();
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+
+                // Get filename from Content-Disposition header
+                const contentDisposition = response.headers.get('Content-Disposition');
+                let filename = 'audio.mp3';
+                if (contentDisposition) {
+                const match = contentDisposition.match(/filename="(.+)"/);
+                if (match) filename = match[1];
+                }
+                link.download = filename;
+
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Show completion
+                setStatus('✅ Download complete! Your file is saved.', 'complete');
+                setTimeout(() => {
+                    progressContainer.classList.remove('active');
+                    updateProgress(0);
+                }, 3000);
+
+            } catch (err) {
+                clearInterval(progressInterval);
+                setStatus('❌ Error: ' + err.message, 'error');
+                progressContainer.classList.remove('active');
+                updateProgress(0);
+            } finally {
+                isDownloading = false;
+                downloadBtn.disabled = false;
+                downloadBtn.textContent = 'Download';
+            }
+        }
+
+        // Enter key support
+        urlInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') startDownload();
+        });
+    </script>
+</body>
+  </html>
