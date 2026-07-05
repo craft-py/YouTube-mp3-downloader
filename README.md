@@ -12,19 +12,6 @@
 
 · 🌐 Global Support - Works with YouTube videos worldwide
 
-📋 Table of Contents
-
-· Tech Stack
-· Prerequisites
-· Installation
-· Quick Start
-· Project Structure
-· API Endpoints
-· Deployment
-· Troubleshooting
-· Contributing
-· License
-
 🛠️ Tech Stack
 
 Technology Version Purpose
@@ -42,3 +29,5 @@ Before you begin, ensure you have the following installed:
 · Python 3.8 or higher
 · pip (Python package manager)
 · FFmpeg (for audio conversion)
+· yt-dlp
+  
