@@ -1,10 +1,15 @@
 ✨ Features
 
 · 🎯 Simple & Intuitive - Clean UI with drag-and-drop support
+
 · 🚀 Lightning Fast - Optimized download and conversion pipeline
+
 · 🎵 High Quality - 192kbps MP3 output
+
 · 📱 Fully Responsive - Works on desktop, tablet, and mobile
+
 · 🔒 Privacy Focused - No data storage, all processing happens client-side
+
 · 🌐 Global Support - Works with YouTube videos worldwide
 
 📋 Table of Contents
